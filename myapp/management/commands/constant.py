@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import CallbackContext
-from myapp.models import Users, i18n
+from myapp.models import User, i18n
 from datetime import datetime
 async def ttrt(func:callable) -> callable:
     async def wrapper(update:Update, context:CallbackContext):

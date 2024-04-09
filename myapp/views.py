@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from myapp.models import Users
+from myapp.models import User
 from .forms import UsersForm
 import json
 from django.db.models import Q
@@ -32,13 +32,13 @@ def dashboard_logout(request):
 
 @login_required_decorator
 def category_list(request):
-    categories = Users.objects.all()
+    categories = User.objects.all()
     ctx = {"costumers": categories, "follow_active": "menu-open"}
     return render(request,'dashboard/categories/list.html',ctx)
 
 @login_required_decorator
 def category_create(request):
-    model = Users()
+    model = User()
     form = UsersForm(request.POST,request.FILES, instance=model)
     if request.POST:
         if form.is_valid():
@@ -53,7 +53,7 @@ def category_create(request):
 
 @login_required_decorator
 def category_edit(request, pk):
-    model = Users.objects.get(id=pk)
+    model = User.objects.get(id=pk)
     form = UsersForm(request.POST or None, instance=model)
     if request.POST:
         if form.is_valid():
@@ -66,7 +66,7 @@ def category_edit(request, pk):
 
 @login_required_decorator
 def category_delete(request, pk):
-    model = Users.objects.get(id=pk)
+    model = User.objects.get(id=pk)
     model.delete()
     return redirect('main:category_list')
 
