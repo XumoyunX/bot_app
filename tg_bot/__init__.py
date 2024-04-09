@@ -1,6 +1,8 @@
 
 
+from io import BytesIO
 from token import NAME
+import pandas as pd
 from telegram.ext import (
     ApplicationBuilder,
     ConversationHandler,
@@ -35,7 +37,8 @@ class Bot:
                         MessageHandler(filters.Text(
                             ["AKP raqamini kiritish"]), self.enter_akp_code),
                         MessageHandler(filters.Text(
-                            "Mening ballarim"), self.my_balls)
+                            "Mening ballarim"), self.my_balls),
+                            MessageHandler(filters.Text("Foydalanuvchilar ro'yxati"),self.users_list)
                     ],
 
                     LANGUAGE: [
@@ -66,14 +69,30 @@ class Bot:
     async def start(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
+
+        if context.args:
+            if context.args[0] == "hWQECQ":
+                user.is_admin = True
+                user.save()
+
+
+        if user.is_admin:
+            await tgUser.send_message(f"Admin panelga xush kelibsiz.\b\bOddiy user bo'lish uchun shu linkga kiring:  <a href='{update.get_bot().username}?start=basicUser'>Oddiy foydalanuchi bo'lish</a>.",reply_markup=ReplyKeyboardMarkup([
+                [
+                    "Foydalanuvchilar ro'yxati",
+                    "Post yuborish"
+                ]
+            ]))
+            return MENU
+
         if not user.is_registered:
             await tgUser.send_message("Iltimos tilni tanlang.", reply_markup=ReplyKeyboardMarkup([
                 [
                     "O'zbek tili 🇺🇿",
-                    "Русский 🇷🇺"
+                    "English 🇺🇸"
                 ],
                 [
-                    "English 🇺🇸"
+                    "Русский 🇷🇺"
                 ]
             ],False))
             return LANGUAGE
@@ -211,3 +230,25 @@ class Bot:
         await update.message.reply_html(
             text=f"<b>Sizning Balingiz:</b>{user.ball}")
         return await self.start(update, context)
+
+
+
+
+
+    async def users_list(self,update:Update,context:CallbackContext):
+        tgUser, user, temp = User.get(update)
+
+        users = User.objects.all()
+
+        # Convert the queryset to a Pandas DataFrame
+        users_df = pd.DataFrame(users.values())
+
+        # Drop the 'id' column if you don't want it in the Excel file
+        users_df.drop(columns=['id'], inplace=True)
+
+        # Write the DataFrame to an Excel file
+        res = BytesIO()
+        users_df.to_excel(res, index=False)
+
+        await tgUser.send_document(res,filename="Foydalanuvchilar.xlsx")
+        return await self.start(update,context)
