@@ -44,21 +44,34 @@ class Bot:
                     ],
 
                     LANGUAGE: [
-                        MessageHandler(filters.TEXT & EXCLUDE, self.lang)
+                        MessageHandler(filters.TEXT & EXCLUDE, self.lang),
+                        MessageHandler(filters.Text(
+                            multilanguage.get_all('back')), self.start)
                     ],
                     NAME: [
-                        MessageHandler(filters.TEXT & EXCLUDE, self.name)
+                        MessageHandler(filters.TEXT & EXCLUDE, self.name),
+                        MessageHandler(filters.Text(
+                            multilanguage.get_all('back')), self.back_from_name)
                     ],
                     PHONE_NUMBER: [
                         MessageHandler(filters.CONTACT | filters.Regex(
-                            r"(\+998)?\s?\d{2}\s?\d{3}\s?\d{2}\s?\d{2}"), self.phone)
+                            r"(\+998)?\s?\d{2}\s?\d{3}\s?\d{2}\s?\d{2}"), self.phone),
+                        MessageHandler(filters.Text(
+                            multilanguage.get_all('back')), self.back_from_number)
+
                     ],
                     SHOP_NUMBER: [
                         MessageHandler(filters.TEXT & EXCLUDE,
-                                       self.shop_number)
+                                       self.shop_number),
+                        MessageHandler(filters.Text(multilanguage.get_all(
+                            'back')), self.back_from_shop_number)
+
                     ],
                     AKP_CODE: [
-                        MessageHandler(filters.TEXT & EXCLUDE, self.akp_code)
+                        MessageHandler(filters.TEXT & EXCLUDE, self.akp_code),
+                        MessageHandler(filters.Text(
+                            multilanguage.get_all('back')), self.start)
+
                     ]
                 },
                 [
@@ -97,7 +110,7 @@ class Bot:
                 [
                     "Русский 🇷🇺"
                 ]
-            ], False))
+            ], False, lang=user.lang))
             return LANGUAGE
         else:
             await tgUser.send_message("Menuga xush kelibsiz.\n\nIltimos tanlang.", reply_markup=ReplyKeyboardMarkup([
@@ -105,7 +118,7 @@ class Bot:
                     user.text("button_enter_akp"),
                     user.text("button_my_balls")
                 ]
-            ], False))
+            ], False, lang=user.lang))
             return MENU
 
     async def lang(self, update: Update, context: CallbackContext):
@@ -122,14 +135,14 @@ class Bot:
                 [
                     "Русский 🇷🇺"
                 ]
-            ]))
+            ], False, lang=user.lang))
             return LANGUAGE
 
         user.lang = langauge
         user.save()
 
         # await tgUser.send_message("To'liq ism va familyangizni kiriting.", reply_markup=ReplyKeyboardMarkup())
-        await tgUser.send_message(user.text("request_name"), reply_markup=ReplyKeyboardMarkup())
+        await tgUser.send_message(user.text("request_name"), reply_markup=ReplyKeyboardMarkup(lang=user.lang))
 
         return NAME
 
@@ -145,7 +158,7 @@ class Bot:
                     KeyboardButton(
                         user.text("send_number_button"), request_contact=True)
                 ]
-            ]
+            ], lang=user.lang
         ))
 
         return PHONE_NUMBER
@@ -158,7 +171,7 @@ class Bot:
         user.phone = number
         user.save()
 
-        await tgUser.send_message(user.text("request_shop_number"), reply_markup=ReplyKeyboardMarkup())
+        await tgUser.send_message(user.text("request_shop_number"), reply_markup=ReplyKeyboardMarkup(lang=user.lang))
         return SHOP_NUMBER
 
     async def shop_number(self, update: Update, context: CallbackContext):
@@ -176,7 +189,7 @@ class Bot:
 
         await update.message.reply_html(
             text=user.text("request_akp"),
-            reply_markup=ReplyKeyboardMarkup()
+            reply_markup=ReplyKeyboardMarkup(lang=user.lang)
         )
         return AKP_CODE
 
@@ -258,3 +271,44 @@ class Bot:
 
         await tgUser.send_document(res, filename="Foydalanuvchilar.xlsx")
         return await self.start(update, context)
+
+
+
+
+    async def back_from_name(self,update:Update,context:CallbackContext):
+        tgUser, user, temp = User.get(update)
+
+        await tgUser.send_message("Iltimos tilni tanlang.", reply_markup=ReplyKeyboardMarkup([
+                [
+                    "O'zbek tili 🇺🇿",
+                    "Узбек тили  🇺🇿",
+                ],
+                [
+                    "Русский 🇷🇺"
+                ]
+            ], False, lang=user.lang))
+        return LANGUAGE
+
+
+    async def back_from_number(self,update:Update,context:CallbackContext):
+        tgUser, user, temp = User.get(update)
+
+        await tgUser.send_message(user.text("request_name"), reply_markup=ReplyKeyboardMarkup(lang=user.lang))
+        return NAME
+
+
+    async def back_from_shop_number(self,update:Update,context:CallbackContext):
+        tgUser, user, temp = User.get(update)
+
+
+        await tgUser.send_message(user.text("request_number"), reply_markup=ReplyKeyboardMarkup(
+            [
+                [
+                    KeyboardButton(
+                        user.text("send_number_button"), request_contact=True)
+                ]
+            ], lang=user.lang
+        ))
+        return PHONE_NUMBER
+
+    

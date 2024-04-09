@@ -13,12 +13,15 @@ from telegram._utils.types import JSONDict
 from constants import BACK, HOME
 from django.db.models import Aggregate, CharField, Value
 
+from language import multilanguage
+
 
 class ReplyKeyboardMarkup(ReplyKeyboardMarkupOrg):
     def __init__(
         self,
         keyboard: Sequence[Sequence[str | KeyboardButton]] = [],
         back: bool = True,
+        lang: str="uz",
         # home: bool = True,
         one_time_keyboard: bool | None = True,
         selective: bool | None = None,
@@ -28,7 +31,7 @@ class ReplyKeyboardMarkup(ReplyKeyboardMarkupOrg):
         api_kwargs: JSONDict | None = None
     ):
         super().__init__(
-            [*keyboard, [BACK if back else ""],
+            [*keyboard, [multilanguage.get('back',lang) if back else ""],
             #  [HOME if home else ""]
              ],
             True,
