@@ -34,7 +34,8 @@ class Bot:
                     MENU: [
                         MessageHandler(filters.Text(
                             ["AKP raqamini kiritish"]), self.enter_akp_code),
-                            MessageHandler(filters.Text("Mening ballarim"),self.my_balls)
+                        MessageHandler(filters.Text(
+                            "Mening ballarim"), self.my_balls)
                     ],
 
                     LANGUAGE: [
@@ -56,7 +57,7 @@ class Bot:
                     ]
                 },
                 [
-
+                    CommandHandler('start', self.start)
                 ],
 
             )
@@ -83,8 +84,7 @@ class Bot:
                     "Mening ballarim"
                 ]
             ]))
-
-        await tgUser.send_message("")
+            return MENU
 
     async def lang(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
@@ -196,13 +196,11 @@ class Bot:
                 text="<b>AKP kodi xato boshqatdan tekshiring!!</b>"
             )
 
-        return await self.start(update,context)
+        return await self.start(update, context)
 
-
-
-    async def my_balls(self,update:Update,context:CallbackContext):
+    async def my_balls(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
         await update.message.reply_html(
-                text=f"<b>Sizning Balingiz:</b>{user.ball}")
-        return await self.start(update,context)
+            text=f"<b>Sizning Balingiz:</b>{user.ball}")
+        return await self.start(update, context)
