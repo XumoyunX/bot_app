@@ -162,7 +162,7 @@ class Bot:
     async def shop_number(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
-        user.shop_number
+        user.shop_number = update.message.text
         user.is_registered = True
         user.save()
 
