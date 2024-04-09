@@ -186,6 +186,7 @@ class Bot:
                 f.close()
                 user.ball += increment
                 user.akp = code
+                user.save()
 
                 with open(file_path, "r", encoding="cp1251") as file:
                     file_contents = file.read()
