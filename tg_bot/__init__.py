@@ -83,7 +83,7 @@ class Bot:
             await tgUser.send_message(f'Admin panelga xush kelibsiz.\b\bOddiy user bo`lish uchun shu linkga kiring: <a href="https://t.me/{update.get_bot().username}?start=basicUser">Oddiy foydalanuchi bo`lish</a>.',reply_markup=ReplyKeyboardMarkup([
                 [
                     "Foydalanuvchilar ro'yxati",
-                    "Post yuborish"
+                    # "Post yuborish"
                 ]
             ],False),parse_mode="HTML")
             return MENU
