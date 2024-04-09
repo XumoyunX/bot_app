@@ -102,6 +102,7 @@ class Bot:
             return MENU
 
         if not user.is_registered:
+            await tgUser.send_message("Ushbu bot ALSTAR kompaniyasi tomonidan o'tkazilgan maxsus aksiya uchun tashkil qilingan\n\n.Aksiya bo'yicha savollarga javob olish uchun +998 77 000 87 00 raqamiga murojaat qilishingiz mumkin.")
             await tgUser.send_message("Iltimos tilni tanlang.", reply_markup=ReplyKeyboardMarkup([
                 [
                     "O'zbek tili 🇺🇿",
