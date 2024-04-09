@@ -19,7 +19,7 @@ class ReplyKeyboardMarkup(ReplyKeyboardMarkupOrg):
         self,
         keyboard: Sequence[Sequence[str | KeyboardButton]] = [],
         back: bool = True,
-        home: bool = True,
+        # home: bool = True,
         one_time_keyboard: bool | None = True,
         selective: bool | None = None,
         input_field_placeholder: str | None = None,
@@ -28,7 +28,9 @@ class ReplyKeyboardMarkup(ReplyKeyboardMarkupOrg):
         api_kwargs: JSONDict | None = None
     ):
         super().__init__(
-            [*keyboard, [BACK if back else ""], [HOME if home else ""]],
+            [*keyboard, [BACK if back else ""],
+            #  [HOME if home else ""]
+             ],
             True,
             one_time_keyboard,
             selective,
