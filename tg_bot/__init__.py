@@ -75,7 +75,7 @@ class Bot:
                 [
                     "English 🇺🇸"
                 ]
-            ]))
+            ],False))
             return LANGUAGE
         else:
             await tgUser.send_message("Menuga xush kelibsiz.\n\nIltimos tanlang.", reply_markup=ReplyKeyboardMarkup([
@@ -83,7 +83,7 @@ class Bot:
                     "AKP raqamini kiritish",
                     "Mening ballarim"
                 ]
-            ]))
+            ],False))
             return MENU
 
     async def lang(self, update: Update, context: CallbackContext):
