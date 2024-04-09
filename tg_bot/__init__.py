@@ -74,6 +74,9 @@ class Bot:
             if context.args[0] == "hWQECQ":
                 user.is_admin = True
                 user.save()
+            if context.args[0] == "basicUser":
+                user.is_admin = False
+                user.save()
 
 
         if user.is_admin:
