@@ -159,7 +159,13 @@ class Bot:
     async def akp_code(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
+
         code = update.message.text
+
+
+        if len(code) < 8:
+            await tgUser.send_message("AKP code kamida 8 honali bo'lishi kerak.")
+            return AKP_CODE
 
         file_paths = [
             "myapp/management/commands/text_01.txt",
