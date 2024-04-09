@@ -53,7 +53,7 @@ class Bot:
                                        self.shop_number)
                     ],
                     AKP_CODE: [
-                        MessageHandler(filters.Regex(r"\d{8}"), self.akp_code)
+                        MessageHandler(filters.TEXT & EXCLUDE, self.akp_code)
                     ]
                 },
                 [
