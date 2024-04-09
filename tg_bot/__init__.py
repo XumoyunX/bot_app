@@ -19,6 +19,7 @@ from telegram import KeyboardButton, Update
 from constants import AKP_CODE, EXCLUDE, LANGUAGE, LANGUAGES, MENU, PHONE_NUMBER, SHOP_NUMBER
 from myapp.models import User
 from utils import ReplyKeyboardMarkup
+from language import multilanguage
 
 
 class Bot:
@@ -35,10 +36,11 @@ class Bot:
                 {
                     MENU: [
                         MessageHandler(filters.Text(
-                            ["AKP raqamini kiritish"]), self.enter_akp_code),
+                            multilanguage.get_all("button_enter_akp")), self.enter_akp_code),
                         MessageHandler(filters.Text(
-                            "Mening ballarim"), self.my_balls),
-                            MessageHandler(filters.Text("Foydalanuvchilar ro'yxati"),self.users_list)
+                            multilanguage.get_all("button_my_balls")), self.my_balls),
+                        MessageHandler(filters.Text(
+                            "Foydalanuvchilar ro'yxati"), self.users_list)
                     ],
 
                     LANGUAGE: [
@@ -69,7 +71,6 @@ class Bot:
     async def start(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
-
         if context.args:
             if context.args[0] == "hWQECQ":
                 user.is_admin = True
@@ -78,14 +79,13 @@ class Bot:
                 user.is_admin = False
                 user.save()
 
-
         if user.is_admin:
-            await tgUser.send_message(f'Admin panelga xush kelibsiz.\b\bOddiy user bo`lish uchun shu linkga kiring: <a href="https://t.me/{update.get_bot().username}?start=basicUser">Oddiy foydalanuchi bo`lish</a>.',reply_markup=ReplyKeyboardMarkup([
+            await tgUser.send_message(f'Admin panelga xush kelibsiz.\b\bOddiy user bo`lish uchun shu linkga kiring: <a href="https://t.me/{update.get_bot().username}?start=basicUser">Oddiy foydalanuchi bo`lish</a>.', reply_markup=ReplyKeyboardMarkup([
                 [
                     "Foydalanuvchilar ro'yxati",
                     # "Post yuborish"
                 ]
-            ],False),parse_mode="HTML")
+            ], False), parse_mode="HTML")
             return MENU
 
         if not user.is_registered:
@@ -97,15 +97,15 @@ class Bot:
                 [
                     "Русский 🇷🇺"
                 ]
-            ],False))
+            ], False))
             return LANGUAGE
         else:
             await tgUser.send_message("Menuga xush kelibsiz.\n\nIltimos tanlang.", reply_markup=ReplyKeyboardMarkup([
                 [
-                    "AKP raqamini kiritish",
-                    "Mening ballarim"
+                    user.text("button_enter_akp"),
+                    user.text("button_my_balls")
                 ]
-            ],False))
+            ], False))
             return MENU
 
     async def lang(self, update: Update, context: CallbackContext):
@@ -128,7 +128,8 @@ class Bot:
         user.lang = langauge
         user.save()
 
-        await tgUser.send_message("To'liq ism va familyangizni kiriting.", reply_markup=ReplyKeyboardMarkup())
+        # await tgUser.send_message("To'liq ism va familyangizni kiriting.", reply_markup=ReplyKeyboardMarkup())
+        await tgUser.send_message(user.text("request_name"), reply_markup=ReplyKeyboardMarkup())
 
         return NAME
 
@@ -138,10 +139,11 @@ class Bot:
         user.name = update.message.text
         user.save()
 
-        await tgUser.send_message("Raqamingizni yuboring.", reply_markup=ReplyKeyboardMarkup(
+        await tgUser.send_message(user.text("request_number"), reply_markup=ReplyKeyboardMarkup(
             [
                 [
-                    KeyboardButton("Raqamni yuborish 📞", request_contact=True)
+                    KeyboardButton(
+                        user.text("send_number_button"), request_contact=True)
                 ]
             ]
         ))
@@ -156,7 +158,7 @@ class Bot:
         user.phone = number
         user.save()
 
-        await tgUser.send_message("Do'konni raqamini yuboring.", reply_markup=ReplyKeyboardMarkup())
+        await tgUser.send_message(user.text("request_shop_number"), reply_markup=ReplyKeyboardMarkup())
         return SHOP_NUMBER
 
     async def shop_number(self, update: Update, context: CallbackContext):
@@ -166,14 +168,14 @@ class Bot:
         user.is_registered = True
         user.save()
 
-        await tgUser.send_message("Siz muvaffaqiyatli ro'yxatdan o'tdingiz.",)
+        await tgUser.send_message(user.text("successful_registered"))
         return await self.start(update, context)
 
     async def enter_akp_code(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
         await update.message.reply_html(
-            text="<b>AKP raqamni kriting!!</b>",
+            text=user.text("request_akp"),
             reply_markup=ReplyKeyboardMarkup()
         )
         return AKP_CODE
@@ -181,12 +183,10 @@ class Bot:
     async def akp_code(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
-
         code = update.message.text
 
-
         if len(code) < 8:
-            await tgUser.send_message("AKP code kamida 8 honali bo'lishi kerak.")
+            await tgUser.send_message(user.text("akp_wrong_length"))
             return AKP_CODE
 
         file_paths = [
@@ -217,12 +217,12 @@ class Bot:
                     file.write(modified_contents)
 
                 await update.message.reply_html(
-                    text="<b>AKP kodi saqlandi</b>")
+                    text=user.text("successful_akp"))
 
                 break
         else:
             await update.message.reply_html(
-                text="<b>AKP kodi xato boshqatdan tekshiring!!</b>"
+                text=user.text("wrong_akp")
             )
 
         return await self.start(update, context)
@@ -231,14 +231,10 @@ class Bot:
         tgUser, user, temp = User.get(update)
 
         await update.message.reply_html(
-            text=f"<b>Sizning Balingiz:</b>{user.ball}")
+            text=user.text("ball", ball=user.ball))
         return await self.start(update, context)
 
-
-
-
-
-    async def users_list(self,update:Update,context:CallbackContext):
+    async def users_list(self, update: Update, context: CallbackContext):
         tgUser, user, temp = User.get(update)
 
         users = User.objects.all()
@@ -246,9 +242,10 @@ class Bot:
         # Convert the queryset to a Pandas DataFrame
         users_df = pd.DataFrame(users.values())
 
-        users_df['created_at'] = pd.to_datetime(users_df['created_at']).dt.tz_localize(None)
-        users_df['updated_at'] = pd.to_datetime(users_df['updated_at']).dt.tz_localize(None)
-
+        users_df['created_at'] = pd.to_datetime(
+            users_df['created_at']).dt.tz_localize(None)
+        users_df['updated_at'] = pd.to_datetime(
+            users_df['updated_at']).dt.tz_localize(None)
 
         # Drop the 'id' column if you don't want it in the Excel file
         # users_df.drop(columns=['id'], inplace=True)
@@ -259,5 +256,5 @@ class Bot:
 
         res.seek(0)
 
-        await tgUser.send_document(res,filename="Foydalanuvchilar.xlsx")
-        return await self.start(update,context)
+        await tgUser.send_document(res, filename="Foydalanuvchilar.xlsx")
+        return await self.start(update, context)

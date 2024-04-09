@@ -1,0 +1,17 @@
+{
+    "request_name": "To'liq ism va familyangizni kiriting.",
+    "request_number": "Raqamingizni yuboring.",
+    "send_number_button": "Raqamni yuborish 📞",
+    "request_shop_number": "Do'konni raqamini yuboring",
+    "successful_registered": "Siz muvaffaqiyatli ro'yxatdan o'tdingiz",
+    "request_akp": "<b>AKP raqamni kriting!!</b>",
+    "akp_wrong_length": "AKP code kamida 8 honali bo'lishi kerak.",
+    "successful_akp": "<b>AKP kodi saqlandi</b>",
+    "wrong_akp": "<b>AKP kodi xato boshqatdan tekshiring!!</b>",
+    "ball": "<b>Sizning Balingiz:</b>{ball}",
+
+
+
+    "button_enter_akp": "AKP raqamini kiritish",
+    "button_my_balls": "Mening ballarim"
+}

@@ -1,6 +1,6 @@
 from django.db import models
 from telegram import Update
-
+from language import MultiLanguage, multilanguage
 
 
 
@@ -54,6 +54,10 @@ class User(models.Model):
     @property
     def temp(self):
         return UserTemp.objects.get_or_create(user=self)[0]
+
+    def text(self, textName, **kwargs):
+        print(self.lang)
+        return multilanguage.get(textName, self.lang, **kwargs)
 
 
 
