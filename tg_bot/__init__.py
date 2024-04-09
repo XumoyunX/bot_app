@@ -113,7 +113,7 @@ class Bot:
             ], False, lang=user.lang))
             return LANGUAGE
         else:
-            await tgUser.send_message("Menuga xush kelibsiz.\n\nIltimos tanlang.", reply_markup=ReplyKeyboardMarkup([
+            await tgUser.send_message(user.text("menu"), reply_markup=ReplyKeyboardMarkup([
                 [
                     user.text("button_enter_akp"),
                     user.text("button_my_balls")
@@ -311,4 +311,4 @@ class Bot:
         ))
         return PHONE_NUMBER
 
-    
+
