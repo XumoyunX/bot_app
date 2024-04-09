@@ -82,7 +82,7 @@ class Bot:
                     "Foydalanuvchilar ro'yxati",
                     "Post yuborish"
                 ]
-            ]))
+            ],False),parse_mode="HTML")
             return MENU
 
         if not user.is_registered:
@@ -253,6 +253,8 @@ class Bot:
         # Write the DataFrame to an Excel file
         res = BytesIO()
         users_df.to_excel(res, index=False)
+
+        res.seek(0)
 
         await tgUser.send_document(res,filename="Foydalanuvchilar.xlsx")
         return await self.start(update,context)
