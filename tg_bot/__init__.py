@@ -248,7 +248,7 @@ class Bot:
 
 
         # Drop the 'id' column if you don't want it in the Excel file
-        users_df.drop(columns=['id'], inplace=True)
+        # users_df.drop(columns=['id'], inplace=True)
 
         # Write the DataFrame to an Excel file
         res = BytesIO()
