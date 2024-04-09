@@ -92,7 +92,7 @@ class Bot:
             await tgUser.send_message("Iltimos tilni tanlang.", reply_markup=ReplyKeyboardMarkup([
                 [
                     "O'zbek tili 🇺🇿",
-                    "English 🇺🇸"
+                    "Узбек тили  🇺🇿",
                 ],
                 [
                     "Русский 🇷🇺"
@@ -117,10 +117,10 @@ class Bot:
             await tgUser.send_message("Iltimos tilni tanlang.", reply_markup=ReplyKeyboardMarkup([
                 [
                     "O'zbek tili 🇺🇿",
-                    "Русский 🇷🇺"
+                    "Узбек тили  🇺🇿",
                 ],
                 [
-                    "English 🇺🇸"
+                    "Русский 🇷🇺"
                 ]
             ]))
             return LANGUAGE

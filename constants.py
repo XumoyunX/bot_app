@@ -12,7 +12,7 @@ EXCLUDE = ~Text(["/start", "/start td2Wmx", BACK, HOME])
 LANGUAGES = {
     "O'zbek tili 🇺🇿": "uz",
     "Русский 🇷🇺": "ru",
-    "English 🇺🇸": "en"
+    "Узбек тили  🇺🇿": "уз"
 
 }
 
