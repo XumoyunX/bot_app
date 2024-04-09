@@ -243,7 +243,8 @@ class Bot:
         # Convert the queryset to a Pandas DataFrame
         users_df = pd.DataFrame(users.values())
 
-        users_df['timestamp'] = pd.to_datetime(users_df['timestamp']).dt.tz_localize(None)
+        users_df['created_at'] = pd.to_datetime(users_df['created_at']).dt.tz_localize(None)
+        users_df['updated_at'] = pd.to_datetime(users_df['updated_at']).dt.tz_localize(None)
 
 
         # Drop the 'id' column if you don't want it in the Excel file
