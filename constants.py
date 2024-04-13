@@ -1,11 +1,11 @@
 from telegram.ext.filters import Text
-
+from language import multilanguage
 
 
 BACK = "🔙 Ortga"
 HOME = "🏠 Bosh menu"
 
-EXCLUDE = ~Text(["/start", "/start td2Wmx", BACK, HOME])
+EXCLUDE = ~Text(["/start", "/start td2Wmx", *multilanguage.get_all('back')])
 
 
 
